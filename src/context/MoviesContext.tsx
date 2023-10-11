@@ -1,5 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import api from "../services/api";
 
 type Movie = {
   id: number;
@@ -10,32 +19,31 @@ type Movie = {
   vote_average: number;
 };
 
-type MovieContextData = {
+interface MovieContextData {
   favoriteMovies: number[];
   allFavoriteMovies: Movie[];
-  addFavoriteMovies: (movieId: number) => void;
-  removeFavoriteMovies: (movieId: number) => void;
-};
+  addFavoriteMovie: (movieId: number) => void;
+  removeFavoriteMovie: (movieId: number) => void;
+}
 
 export const MovieContext = createContext<MovieContextData>({
   favoriteMovies: [],
   allFavoriteMovies: [],
-  addFavoriteMovies: () => {},
-  removeFavoriteMovies: () => {},
+  addFavoriteMovie: () => {},
+  removeFavoriteMovie: () => {},
 });
 
 type MovieProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-export function MovieProvider({ children }: MovieProviderProps) {
+export const MovieProvider = ({ children }: MovieProviderProps) => {
   const [favoriteMovies, setFavoriteMovies] = useState<number[]>([]);
   const [allFavoriteMovies, setAllFavoriteMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     async function loadFavoriteMovies() {
-      const favoriteMovies = await AsyncStorage.getItem("@favoriteMovies");
-
+      const favoriteMovies = await AsyncStorage.getItem("@FavoriteMovies");
       if (favoriteMovies) {
         setFavoriteMovies(JSON.parse(favoriteMovies));
       }
@@ -43,13 +51,13 @@ export function MovieProvider({ children }: MovieProviderProps) {
     loadFavoriteMovies();
   }, []);
 
-  const addFavoriteMovies = useCallback(
+  const addFavoriteMovie = useCallback(
     async (movieId: number) => {
       if (!favoriteMovies.includes(movieId)) {
         const newFavoriteMovies = [...favoriteMovies, movieId];
         setFavoriteMovies(newFavoriteMovies);
         await AsyncStorage.setItem(
-          "@favoriteMovies",
+          "@FavoriteMovies",
           JSON.stringify(newFavoriteMovies)
         );
       }
@@ -57,28 +65,50 @@ export function MovieProvider({ children }: MovieProviderProps) {
     [favoriteMovies]
   );
 
-  const removeFavoriteMovies = useCallback(
+  const removeFavoriteMovie = useCallback(
     async (movieId: number) => {
       const newFavoriteMovies = favoriteMovies.filter((id) => id !== movieId);
       setFavoriteMovies(newFavoriteMovies);
       await AsyncStorage.setItem(
-        "@favoriteMovies",
+        "@FavoriteMovies",
         JSON.stringify(newFavoriteMovies)
-      ); 
+      );
     },
     [favoriteMovies]
   );
 
-    const contextData : MovieContextData = {
-        favoriteMovies,
-        allFavoriteMovies,
-        addFavoriteMovies,
-        removeFavoriteMovies,
-    };
+  const parsedFavoriteMovies = useMemo(() => favoriteMovies, [favoriteMovies]);
 
-    return(
-        <MovieContext.Provider value={contextData}>
-            {children}
-        </MovieContext.Provider>
-    )
-}
+  const getAllFavoriteMovies = useCallback(async () => {
+    try {
+      const movies = await Promise.all(
+        parsedFavoriteMovies.map(async (movieId: number) => {
+          const response = await api.get<Movie>(`/movie/${movieId}`);
+          return response.data;
+        })
+      );
+      setAllFavoriteMovies(movies);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [parsedFavoriteMovies]);
+
+  useEffect(() => {
+    getAllFavoriteMovies();
+  }, [parsedFavoriteMovies, getAllFavoriteMovies]);
+
+  const contextData: MovieContextData = {
+    favoriteMovies: parsedFavoriteMovies,
+    allFavoriteMovies,
+    addFavoriteMovie,
+    removeFavoriteMovie,
+  };
+
+  return (
+    <MovieContext.Provider value={contextData}>
+      {children}
+    </MovieContext.Provider>
+  );
+};
+
+export { Movie };

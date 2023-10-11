@@ -1,12 +1,10 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BookmarkSimple, House, User } from "phosphor-react-native";
-
-import { Home } from "../screens/Home";
-import { Favoritos } from "../screens/Favoritos";
+import { BookmarkSimple, House, MagnifyingGlass, User } from "phosphor-react-native";
 import { Details } from "../screens/Details";
+import { Home } from "../screens/Home";
+import { MyList } from "../screens/MyList";
+import { Search } from "../screens/Search";
 import { Perfil } from "../screens/Perfil";
-import Login from "../screens/Login";
-import Splash from "../screens/Splash";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -15,22 +13,18 @@ export function TabRoutes() {
     <Navigator
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#242a32",
+          backgroundColor: "#242A32",
           height: 78,
           alignItems: "center",
-          borderTopWidth: 3,
-          borderTopColor: "#0296e5",
+          borderTopWidth: 1,
+          borderTopColor: "#0296E5",
         },
         headerShown: false,
-        tabBarActiveTintColor: "#0296e5",
-        tabBarInactiveTintColor: "#fff",
+        tabBarActiveTintColor: "#0296E5",
+        tabBarInactiveTintColor: "#67686D",
         tabBarShowLabel: false,
       }}
     >
-      <Screen name="Splash" component={Splash} />
-
-      <Screen name="Login" component={Login} />
-
       <Screen
         name="Home"
         component={Home}
@@ -42,21 +36,29 @@ export function TabRoutes() {
       />
 
       <Screen
-        name="Details"
-        component={Details}
+        name="Search"
+        component={Search}
         options={{
-          tabBarButton: () => null,
+          tabBarIcon: ({ color }) => (
+            <MagnifyingGlass color={color} size={30} weight="light" />
+          ),
         }}
       />
 
       <Screen
-        name="Favoritos"
-        component={Favoritos}
+        name="MyList"
+        component={MyList}
         options={{
           tabBarIcon: ({ color }) => (
             <BookmarkSimple color={color} size={30} weight="light" />
           ),
         }}
+      />
+
+      <Screen
+        name="Details"
+        component={Details}
+        options={{ tabBarButton: () => null }}
       />
 
       <Screen

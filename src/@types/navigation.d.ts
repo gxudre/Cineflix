@@ -1,7 +1,7 @@
 export declare global {
-    namespace ReactNavigation {
-      interface RootParamList {
-        Details: { movieId: number };
-      }
+  namespace ReactNavigation {
+    interface RootParamList {
+      Details: { movieId: number };
     }
   }
+}
