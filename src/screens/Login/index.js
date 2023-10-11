@@ -12,11 +12,12 @@ import {
 } from "./style";
 import logo from "../../assets/logo.png";
 import imageBackground from "../../assets/login.jpg";
+import { Home } from "../Home";
 
 const Login = ({navigation}) => {
 
 const handleLogin = () => {
-    navigation.replace("Home")
+    navigation.navigate('Home')
 }
 
 const handleEsqueceuSenha = () => {
