@@ -8,11 +8,13 @@ import {
   } from "react-native";
   import React, { useState, useContext } from "react";
   import { AuthContext } from "../../context/AuthContext";
+import { CriarConta } from "../CriarConta/CriarConta";
   
-  export function Login() {
+  
+  export function Login({navigation}) {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const { login, error } = useContext(AuthContext);
+    const { login } = useContext(AuthContext);
     return (
       <View style={Styles.container}>
         <View style={Styles.imgContainer}>
@@ -39,7 +41,7 @@ import {
         <Pressable style={Styles.sairButton} onPress={() => login(email, senha)}>
           <Text style={Styles.textBtn}>Entrar</Text>
         </Pressable>
-        <Pressable  onPress={() => {}}>
+        <Pressable  onPress={() => navigation.navigate("CriarConta")}>
           <Text style={Styles.blueBtn}>Criar Conta</Text>
         </Pressable>
       </View>

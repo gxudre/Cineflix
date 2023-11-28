@@ -20,6 +20,7 @@
     "expo-status-bar": "~1.4.4",
     "phosphor-react-native": "^1.1.2",
     "react": "18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-native": "0.71.13",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-image-picker": "^5.1.0",

@@ -5,8 +5,11 @@ import {
     Pressable,
     StyleSheet,
   } from "react-native";
+  import { useState, useContext } from "react";
+  import { AuthContext} from "../../context/AuthContext";
   
-  export function Perfil() {
+  export function Perfil({navigation}) {
+    const { logout, user } = useContext(AuthContext);
     return (
       <View style={Styles.container}>
         <View style={Styles.imgContainer}>
@@ -14,12 +17,12 @@ import {
             style={Styles.imgPerfil}
             source={require("../../../assets/adaptive-icon.png")}
           />
-          <Text style={Styles.textEmail}>Fulaninho@hotmail.com</Text>
+          <Text style={Styles.textEmail}>{ user.email }</Text>
         </View>
         <View>
         
         </View>
-        <Pressable style={Styles.sairButton} onPress={() => {}}>
+        <Pressable style={Styles.sairButton} onPress={() => logout() }>
           <Text style={Styles.textBtn}>Sair</Text>
         </Pressable>
       </View>
