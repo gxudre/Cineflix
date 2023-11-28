@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BookmarkSimple, House, MagnifyingGlass, User } from "phosphor-react-native";
+
 import { Details } from "../screens/Details";
 import { Home } from "../screens/Home";
 import { MyList } from "../screens/MyList";
@@ -25,6 +26,7 @@ export function TabRoutes() {
         tabBarShowLabel: false,
       }}
     >
+
       <Screen
         name="Home"
         component={Home}

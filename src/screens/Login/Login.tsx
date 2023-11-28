@@ -6,8 +6,13 @@ import {
     StyleSheet,
     TextInput,
   } from "react-native";
+  import React, { useState, useContext } from "react";
+  import { AuthContext } from "../../context/AuthContext";
   
-  export function Perfil() {
+  export function Login() {
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const { login, error } = useContext(AuthContext);
     return (
       <View style={Styles.container}>
         <View style={Styles.imgContainer}>
@@ -31,7 +36,7 @@ import {
             secureTextEntry={true}
           />
         </View>
-        <Pressable style={Styles.sairButton} onPress={() => {}}>
+        <Pressable style={Styles.sairButton} onPress={() => login(email, senha)}>
           <Text style={Styles.textBtn}>Entrar</Text>
         </Pressable>
         <Pressable  onPress={() => {}}>
