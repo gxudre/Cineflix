@@ -7,10 +7,11 @@ interface User {
 }
 
 interface AuthContextType {
-  user: User;
+  user: User ;
   login: (email: string, senha: string) => void;
   register: (email: string) => void;
   logout: () => void;
+  error: string | null;
 }
 
 interface AuthProviderProps {
@@ -22,19 +23,14 @@ const AuthContext = createContext<AuthContextType>({
   login: () => {},
   register: () => {},
   logout: () => {},
+  error: null,
 });
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<User>({ email: "", logado: false, senha: "" });
+  const [ error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User>({ email: "gxudre@gmail.com", logado: false, senha: "123426" });
 
   const login = (email: string, senha: string) => {
-    setUser({
-      email: email,
-      senha: senha,
-      logado: true,
-    });
-
     const errorMessage = "E-mail ou senha inválidos.";
 
     if (!email || !senha) {
@@ -42,7 +38,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return;
     }
 
-    // Validar formato de e-mail usando uma expressão regular
+  
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError(errorMessage);
@@ -56,7 +52,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser({
         email: email,
         logado: true,
-        senha: user.senha, // Manter a senha anterior, se necessário
+        senha: user.senha, 
       });
       setError(null);
     } else {
@@ -68,7 +64,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser({
       email: email,
       logado: true,
-      senha: "", // Definir a senha vazia para um novo registro
+      senha: "", 
     });
   };
 
@@ -81,6 +77,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout,
+    error,
   };
 
   return <AuthContext.Provider value={contexto}>{children}</AuthContext.Provider>;
